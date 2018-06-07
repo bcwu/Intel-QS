@@ -75,6 +75,8 @@ unsigned long qumalloc(string args) {
 unsigned long qufree(string args) {
 
     if (fPsiAllocated) {
+        psi1->Print("x");
+        
         delete psi1;
         psi1 = nullptr;
         fPsiAllocated = false;
