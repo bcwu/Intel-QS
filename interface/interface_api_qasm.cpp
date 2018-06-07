@@ -28,7 +28,7 @@ using namespace std;
 
 
 using Type = ComplexDP;
-extern QbitRegister<Type> *psi1;
+extern NoisyQureg<Type> *psi1;
 
 
 // Constant defining the rotational angle of a T-dagger gate. Basically, -(pi/4).

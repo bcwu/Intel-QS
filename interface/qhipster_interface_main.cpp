@@ -27,7 +27,7 @@ using namespace std;
 
 // Global variables related to Psi-function .malloc/.free routines.
 using Type = ComplexDP;
-QbitRegister<Type> *psi1 = nullptr;
+NoisyQureg<Type> *psi1 = nullptr;
 bool fPsiAllocated = false;
 
 
@@ -63,6 +63,8 @@ int main(int argc, char*argv[]) {
                if (result > 0) {
                    cerr << "Qasm Op failed - ["<<token<<"]"<<endl;
                }
+               if (fPsiAllocated)
+                 psi1->apply_noise_gates_on_all_qubits();
             }
         } else
           break;
