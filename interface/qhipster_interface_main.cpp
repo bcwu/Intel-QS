@@ -18,6 +18,7 @@
 #include <unordered_map>
 #include <functional>
 #include <stdexcept>
+#include <cstdlib>
 
 #include "qureg/qureg.hpp"
 #include "interface_api_qasm.h"
@@ -30,13 +31,21 @@ using Type = ComplexDP;
 NoisyQureg<Type> *psi1 = nullptr;
 bool fPsiAllocated = false;
 
-
+unsigned if_RNG_seed=12345;
+double if_T1=100000, if_T2=100000;
 
 int main(int argc, char*argv[]) {
     openqu::mpi::Environment env(argc, argv);
     string line = "";
     string token = "";
 
+    if (argc > 1)
+      if_RNG_seed = atoi(argv[1]);
+    if (argc > 2)
+      if_T1 = atof(argv[2]);
+    if (argc > 3)
+      if_T2 = atof(argv[3]);
+    
     if (env.is_usefull_rank() == false) 
         return 0;
 

@@ -26,6 +26,8 @@ using Type = ComplexDP;
 extern NoisyQureg<Type> *psi1;
 extern bool fPsiAllocated;
 
+extern unsigned if_RNG_seed;
+extern double if_T1, if_T2;
 
 unsigned long qumalloc(string args) {
 
@@ -50,7 +52,8 @@ unsigned long qumalloc(string args) {
 
     // Ensure wavefunction register is in the allowed range.
     if ((num_qubits > 0) && (num_qubits <= 43)) {
-        psi1 = new NoisyQureg<Type>(num_qubits);
+        psi1 = new NoisyQureg<Type>(num_qubits,
+                                    if_RNG_seed, if_T1, if_T2);
 
         if (psi1) {
             (*psi1)[0] = 1;
