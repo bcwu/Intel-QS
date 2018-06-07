@@ -92,6 +92,7 @@ class NoisyQureg : public QbitRegister<Type> {
     // Perform gates
     void apply1QubitGate(unsigned const, openqu::TinyMatrix<Type, 2, 2, 32>);
     void applyHadamard(unsigned const);
+    void applyPauliX(unsigned const);
     void applyRotationX(unsigned const, BaseType);
     void applyRotationY(unsigned const, BaseType);
     void applyRotationZ(unsigned const, BaseType);
@@ -275,6 +276,13 @@ void NoisyQureg<Type>::applyHadamard(unsigned const q)
 {
   AddNoiseOneQubitGate(q); 
   QbitRegister<Type>::applyHadamard(q);
+}
+
+template <class Type>
+void NoisyQureg<Type>::applyPauliX(unsigned const q)
+{
+  AddNoiseOneQubitGate(q); 
+  QbitRegister<Type>::applyPauliX(q);
 }
 
 template <class Type>
