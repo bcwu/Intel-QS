@@ -177,7 +177,7 @@ void NoisyQureg<Type>::AddNoiseOneQubitGate(unsigned const qubit)
   for (unsigned q = 0; q<Nqubits; q++)
       TimeFromLastGate[q] += TimeOneQubitLogicalGate ;
   // Reset the time elapsed from last logical gate on the specific qubit
-  TimeFromLastGate[qubit]=0.;
+  TimeFromLastGate[qubit]=TimeOneQubitLogicalGate;
   // Update counter for (logical) one-qubit gates
   OneQubitLogicalGateCount++;
 }
@@ -195,8 +195,8 @@ void NoisyQureg<Type>::AddNoiseTwoQubitGate(unsigned const q1, unsigned const q2
   for (unsigned q = 0; q<Nqubits; q++)
       TimeFromLastGate[q] += TimeTwoQubitLogicalGate ;
   // Reset the time elapsed from last logical gate on the specific qubits
-  TimeFromLastGate[q1]=0.;
-  TimeFromLastGate[q2]=0.;
+  TimeFromLastGate[q1]=TimeTwoQubitLogicalGate;
+  TimeFromLastGate[q2]=TimeTwoQubitLogicalGate;
   // Update counter for (logical) two-qubit gates
   TwoQubitLogicalGateCount++;
 }
