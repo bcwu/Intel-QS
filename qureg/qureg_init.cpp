@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 
 #include "qureg.hpp"
-
+#include <mkl.h>
 
 template <class Type>
 QbitRegister<Type>::QbitRegister()

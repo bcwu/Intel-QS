@@ -16,11 +16,8 @@
 
 include ../make.inc
 
-LDFLAGS =   -L${MKLROOT}/lib/intel64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_ilp64 -lpthread
-
-ifeq ($(bigmpi),1)
- LDFLAGS := ${BIGMPI_LIB} ${LDFLAGS}
-endif
+# LDFLAGS =   -L${MKLROOT}/lib/intel64 -lmkl_cdft_core -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lmkl_blacs_intelmpi_ilp64 -lpthread
+LDFLAGS =   -L${MKLROOT}/lib/intel64 -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lmkl_intel_lp64 -lpthread
 
 SRC  = $(wildcard *.cpp)
 OBJS = $(addsuffix .o, $(basename $(SRC)))
@@ -31,10 +28,13 @@ EXEC = qasm_interface.exe
 
 all: $(EXEC)
 $(EXEC): ${OBJS} makefile ../qureg/qHiPSTER.a
-	$(CC) ${CFLAGS} ${OBJS} ../qureg/qHiPSTER.a ${LDFLAGS} -o $(EXEC)
+	$(CC) ${CFLAGS} ${OBJS} ../qureg/qHiPSTER.a ${LDFLAGS} -o $(EXEC) 
 
 clean:
 	rm -f *.o *.s *.d *~ $(EXEC)
+
+qasm_clean:
+	find output/ -name "*.txt" -delete
 
 depend:
 	makedepend -Y ${DEFS} ${SRC} ${INC}

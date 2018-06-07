@@ -119,7 +119,7 @@ void QbitRegister<Type>::collapseQubit(unsigned qubit, bool value)
  */
 
 template <class Type>
-QbitRegister<Type>::BaseType QbitRegister<Type>::getProbability(unsigned qubit)
+typename QbitRegister<Type>::BaseType QbitRegister<Type>::getProbability(unsigned qubit)
 {
   int myrank = openqu::mpi::Environment::rank();
   int nprocs = openqu::mpi::Environment::size();

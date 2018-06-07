@@ -42,7 +42,7 @@ bool QbitRegister<Type>::operator==(const QbitRegister &rhs)
 /// @brief ???
 //------------------------------------------------------------------------------
 template <class Type>
-QbitRegister<Type>::BaseType QbitRegister<Type>::maxabsdiff(QbitRegister &x, Type sfactor)
+typename QbitRegister<Type>::BaseType QbitRegister<Type>::maxabsdiff(QbitRegister &x, Type sfactor)
 {
   MPI_Comm comm = openqu::mpi::Environment::comm();
   assert(localSize() == x.localSize());
@@ -73,7 +73,7 @@ QbitRegister<Type>::BaseType QbitRegister<Type>::maxabsdiff(QbitRegister &x, Typ
 /// @brief ???
 //------------------------------------------------------------------------------
 template <class Type>
-QbitRegister<Type>::BaseType QbitRegister<Type>::maxl2normdiff(QbitRegister &x)
+typename QbitRegister<Type>::BaseType QbitRegister<Type>::maxl2normdiff(QbitRegister &x)
 {
   MPI_Comm comm = openqu::mpi::Environment::comm();
   assert(localSize() == x.localSize());
@@ -120,7 +120,7 @@ void QbitRegister<Type>::normalize()
 /// @brief Compute the norm of the state (L2 norm).
 //------------------------------------------------------------------------------
 template <class Type>
-QbitRegister<Type>::BaseType QbitRegister<Type>::computenorm()
+typename QbitRegister<Type>::BaseType QbitRegister<Type>::computenorm()
 {
   MPI_Comm comm = openqu::mpi::Environment::comm();
   BaseType local_normsq = 0;
@@ -330,8 +330,10 @@ std::string printvec(Type *state, std::size_t size, std::size_t nqbits, BaseType
     // std::string bin = dec2bin(rank * size + i, nqbits, false);
     std::string bin = permutation->lin2perm(rank * size + i);
     char s[4096];
-    sprintf(s, "\t%-13.8lf + i * %-13.8lf   %% |%s> p=%lf\n", real(state[i]), imag(state[i]),
-            bin.c_str(), std::abs(state[i]) * std::abs(state[i]));
+    // sprintf(s, "\t%-13.8lf + i * %-13.8lf   %% |%s> p=%lf\n", real(state[i]), imag(state[i]),
+    //         bin.c_str(), std::abs(state[i]) * std::abs(state[i]));
+    sprintf(s, "%-.8lf %-.8lf |%s> %lf\n", real(state[i]), imag(state[i]),
+        bin.c_str(), std::abs(state[i]) * std::abs(state[i]));
     str = str + s;
     pcum += std::abs(state[i]) * std::abs(state[i]);
   }
@@ -366,17 +368,9 @@ void QbitRegister<Type>::Print(std::string x, std::vector<std::size_t> qbits)
 #ifdef OPENQU_HAVE_MPI
     for (std::size_t i = 1; i < nprocs; i++) {
       std::size_t len;
-#ifdef BIGMPI
-      MPIX_Recv_x(&len, 1, MPI_LONG, i, 1000 + i, comm, MPI_STATUS_IGNORE);
-#else
       MPI_Recv(&len, 1, MPI_LONG, i, 1000 + i, comm, MPI_STATUS_IGNORE);
-#endif //BIGMPI
       s.resize(len);
-#ifdef BIGMPI
-      MPIX_Recv_x((void *)(s.c_str()), len, MPI_CHAR, i, i, comm, MPI_STATUS_IGNORE);
-#else
       MPI_Recv((void *)(s.c_str()), len, MPI_CHAR, i, i, comm, MPI_STATUS_IGNORE);
-#endif //BIGMPI
       printf("%s", s.c_str());
     }
 #endif
@@ -385,13 +379,8 @@ void QbitRegister<Type>::Print(std::string x, std::vector<std::size_t> qbits)
 #ifdef OPENQU_HAVE_MPI
     std::string s = printvec(state, localSize(), nqbits, pcum, permutation);
     std::size_t len = s.length() + 1;
-#ifdef BIGMPI
-    MPIX_Send_x(&len, 1, MPI_LONG, 0, 1000 + rank, comm);
-    MPIX_Send_x(const_cast<char *>(s.c_str()), len, MPI_CHAR, 0, rank, comm);
-#else
     MPI_Send(&len, 1, MPI_LONG, 0, 1000 + rank, comm);
     MPI_Send(const_cast<char *>(s.c_str()), len, MPI_CHAR, 0, rank, comm);
-#endif //BIGMPI
 #endif
   }
 

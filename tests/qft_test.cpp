@@ -17,7 +17,7 @@
 #include "qureg/qureg.hpp"
 
 
-#if (defined(__ICC) || defined(__INTEL_COMPILER))
+#if (defined(__ICC) || defined(__INTEL_COMPILER) || 1)
 #include <mkl.h>
 #if defined(OPENQU_HAVE_MPI)
 #include <mkl_cdft.h>
@@ -58,7 +58,7 @@ static void cfft(QbitRegister<Type> &x)
   
   int nprocs = openqu::mpi::Environment::size();
   MPI_Comm comm = openqu::mpi::Environment::comm();
-#if (defined(__ICC) || defined(__INTEL_COMPILER))
+#if (defined(__ICC) || defined(__INTEL_COMPILER) || 1)
 #ifdef OPENQU_HAVE_MPI
   DFTI_DESCRIPTOR_DM_HANDLE desc;
   MKL_LONG v;
